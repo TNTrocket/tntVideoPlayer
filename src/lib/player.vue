@@ -5,10 +5,8 @@
   >
     <video
       class="v_video"
-      :src="videoUrl"
+      :src="src"
       preload="auto"
-      @canplay="canplay"
-      @timeupdate="timeupdate"
     ></video>
     <div class="v_playIcon"></div>
     <div class="v_controls">
@@ -93,6 +91,7 @@ export default {
     this.vvolumeBar = this.warpper.querySelector('.v_volumeBar')
     this.speedList = this.warpper.querySelector('.speedList')
     this.vspeed = this.warpper.querySelector('.v_speed')
+    this.vcontrols = this.warpper.querySelector('.v_controls')
 
     this.clientX = this.vpoint.getBoundingClientRect().left + 5
     // this.clientVolumeY = this.vvolumePoint.getBoundingClientRect().top + 5
@@ -114,6 +113,25 @@ export default {
       this.speedEvent()
       this.fullScreenEvent()
       this.volumeEvent()
+      this.videoEvent()
+      this.warpperEvent()
+    },
+    warpperEvent() {
+      this.warpper.onmousemove = () => {
+        clearTimeout(this.timer)
+        this.vcontrols.style.bottom = 0
+        this.timer = setTimeout(() => {
+          this.vcontrols.style.bottom = -50 + 'px'
+        }, 5000)
+      }
+    },
+    videoEvent() {
+      this.video.ontimeupdate = () => {
+        this.update()
+      }
+      this.video.oncanplay = () => {
+        this.canplay()
+      }
     },
     volumeEvent() {
       this.vvolume.onmouseover = () => {
@@ -129,26 +147,7 @@ export default {
       }
     },
     fullScreenEvent() {
-      this.vfullScreen.onclick = () => {
-        if (this.isFullScreen()) {
-          if (document.exitFullscreen) {
-            document.exitFullscreen()
-          } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen()
-          } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen()
-          } else if (document.msExitFullscreen) {
-            document.msExitFullscreen()
-          }
-        } else {
-          let requestFullScreen =
-            this.video.requestFullScreen ||
-            this.video.webkitRequestFullScreen ||
-            this.video.mozRequestFullScreen ||
-            this.video.msRequestFullscreen
-          requestFullScreen.call(this.video)
-        }
-      }
+      this.getFullScreen()
     },
     speedEvent() {
       this.speedList.onclick = e => {
@@ -190,6 +189,28 @@ export default {
     },
     initTxt() {
       this.currentTime = this.formatTime(0)
+    },
+    getFullScreen() {
+      this.vfullScreen.onclick = () => {
+        if (this.isFullScreen()) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen()
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen()
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen()
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen()
+          }
+        } else {
+          let requestFullScreen =
+            this.video.requestFullScreen ||
+            this.video.webkitRequestFullScreen ||
+            this.video.mozRequestFullScreen ||
+            this.video.msRequestFullscreen
+          requestFullScreen.call(this.video)
+        }
+      }
     },
     isFullScreen() {
       return (
@@ -252,9 +273,6 @@ export default {
     canplay() {
       this.timeDuration = this.formatTime(this.video.duration)
     },
-    timeupdate() {
-      this.update()
-    },
     update() {
       if (this.progressMove) return
       this.currentTime = this.formatTime(this.video.currentTime)
@@ -302,6 +320,7 @@ export default {
 .videoWarpper {
   width: 100%;
   position: relative;
+  overflow: hidden;
 }
 .v_video {
   width: 100%;
@@ -314,6 +333,7 @@ export default {
   left: 0;
   right: 0;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+  transition: 0.5s all;
 }
 .v_controls .v_process {
   width: 96%;
