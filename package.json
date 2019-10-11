@@ -1,6 +1,6 @@
 {
   "name": "tntplayer",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --config webpack.dev.js --open --hot",
