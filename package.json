@@ -1,6 +1,6 @@
 {
   "name": "tntplayer",
-  "version": "0.5.0",
+  "version": "0.8.0",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --config webpack.dev.js --open --hot",
@@ -14,7 +14,7 @@
   },
   "main": "dist/tntPlayer.js",
   "files": [
-    "src/lib/*"
+    "src/lib/*", "./readme.md"
   ],
   "devDependencies": {
     "@babel/core": "^7.6.2",
@@ -49,6 +49,10 @@
     "plugins": {
       "autoprefixer": {}
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TNTrocket/tntVideoPlayer.git"
   },
   "browserslist": [
     "> 1%",
